@@ -2,6 +2,7 @@
 
 A rough tracking of work done
 
-## Hour 0
+## Hour 0-2
 
-Create project
+- Created project
+- Initial investigation for game loop and curses
