@@ -6,3 +6,7 @@ A rough tracking of work done
 
 - Created project
 - Initial investigation for game loop and curses
+
+## Hour 3
+
+- Initial Piece mechanics

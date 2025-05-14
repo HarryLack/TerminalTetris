@@ -78,10 +78,10 @@ STATES = {
 
 
 class Piece:
-    def __init__(self, kind: Tetronimo, rotation: Orientation):
+    def __init__(self, kind: Tetronimo,  position: tuple[int], rotation: Orientation = Orientation.NONE):
         self.__kind = kind
         self.__rotation = rotation
-        pass
+        self.__position = position
 
     @property
     def kind(self):
@@ -91,16 +91,65 @@ class Piece:
     def rotation(self):
         return self.__rotation
 
+    @property
+    def position(self):
+        return self.__position
+
     # TODO Check this?
     def rotate(self, right=True):
-        self.__rotation -= 1
+        match self.__rotation:
+            case Orientation.NONE:
+                if right:
+                    self.__rotation = Orientation.RIGHT
+                else:
+                    self.__rotation = Orientation.LEFT
+            case Orientation.RIGHT:
+                if right:
+                    self.__rotation = Orientation.DOWN
+                else:
+                    self.__rotation = Orientation.NONE
+            case Orientation.DOWN:
+                if right:
+                    self.__rotation = Orientation.LEFT
+                else:
+                    self.__rotation = Orientation.RIGHT
+            case Orientation.LEFT:
+                if right:
+                    self.__rotation = Orientation.NONE
+                else:
+                    self.__rotation = Orientation.DOWN
 
-    # Rename this?
-    def rep(self):
-        return STATES[self.__kind][self.rotation]
+    @property
+    def state(self):
+        return STATES[self.__kind][self.__rotation]
+
+    def move(self, x, y):
+        self.__position = (self.__position[0]+x, self.__position[1]+y)
 
 
 class Board:
-    def __init__(self):
-        self.__pieces: list[Tetronimo] = []
-        pass
+    def __init__(self, width, height):
+        self.__pieces: list[Piece] = []
+        self.__width = width
+        self.__height = height
+
+    @property
+    def pieces(self):
+        return self.__pieces
+
+    def add_piece(self, piece: Piece):
+        self.__pieces.append(piece)
+
+    def to_string(self):
+        world = ""
+        for i in range(self.__height):
+            for j in range(self.__width):
+                if i == 0 or i == self.__height-1:
+                    world += "#"
+                else:
+                    if j == 0 or j == self.__width-1:
+                        world += "#"
+                    else:
+                        world += " "
+            world += "\n"
+        return world

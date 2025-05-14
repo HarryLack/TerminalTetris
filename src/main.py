@@ -20,8 +20,8 @@ def log(thing):
 
 
 def main(stdscr: curses.window):
-    print(TARGET_FRAME_TIME)
-    print("Hello, World!")
+    log(TARGET_FRAME_TIME)
+    log("Hello, World!")
 
     dt = time.time()
 
@@ -30,21 +30,23 @@ def main(stdscr: curses.window):
     while (True and iter < 1000):
         # TODO Make this actually game loop
         key = stdscr.getch()
+        log(f"Key:{key}")
         match key:
             # s
             case 115:
-                stdscr.addstr("move")
+                log("s")
             # a
             case 97:
-                stdscr.addstr("move")
+                log("a")
             # d
             case 100:
-                stdscr.addstr("move")
+                log("d")
             # q
             case 113:
-                stdscr.addstr("ASDASD")
+                log("q")
             # ESC
             case 27:
+                log("esc")
                 curses.endwin()
                 return
 
@@ -55,7 +57,7 @@ def main(stdscr: curses.window):
             continue
 
         # key = sys.stdin.read(1)
-        # print("key:", key)
+        # log("key:", key)
 
         stdscr.addstr(0, 0, create_world(WIDTH, HEIGHT))
         stdscr.addstr(f"{iter}")
