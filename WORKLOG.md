@@ -10,3 +10,7 @@ A rough tracking of work done
 ## Hour 3
 
 - Initial Piece mechanics
+
+## Hour 4
+
+- Logger

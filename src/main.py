@@ -3,6 +3,7 @@ import curses
 import sys
 import time
 
+from logger import Logger
 from render import clear_console, create_world
 from game import I_STATES, Board, Piece, Orientation
 
@@ -14,14 +15,10 @@ TARGET_FRAME_RATE = 30
 # ms per frameas seconds
 TARGET_FRAME_TIME = (1000.0/TARGET_FRAME_RATE)/1000
 
-
-def log(thing):
-    print(thing, end="")
-
-
 def main(stdscr: curses.window):
-    log(TARGET_FRAME_TIME)
-    log("Hello, World!")
+    logger = Logger()
+    logger.log(TARGET_FRAME_TIME)
+    logger.log("Hello, World!")
 
     dt = time.time()
 
@@ -30,23 +27,23 @@ def main(stdscr: curses.window):
     while (True and iter < 1000):
         # TODO Make this actually game loop
         key = stdscr.getch()
-        log(f"Key:{key}")
+        logger.log(f"Key:{key}")
         match key:
             # s
             case 115:
-                log("s")
+                logger.log("s")
             # a
             case 97:
-                log("a")
+                logger.log("a")
             # d
             case 100:
-                log("d")
+                logger.log("d")
             # q
             case 113:
-                log("q")
+                logger.log("q")
             # ESC
             case 27:
-                log("esc")
+                logger.log("esc")
                 curses.endwin()
                 return
 
@@ -57,7 +54,7 @@ def main(stdscr: curses.window):
             continue
 
         # key = sys.stdin.read(1)
-        # log("key:", key)
+        # logger.log("key:", key)
 
         stdscr.addstr(0, 0, create_world(WIDTH, HEIGHT))
         stdscr.addstr(f"{iter}")
