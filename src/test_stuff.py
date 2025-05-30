@@ -1,16 +1,6 @@
 import unittest
 
 from game import STATES, Board, Orientation, Piece, Tetronimo
-from src.render import create_world
-
-
-class TestMain(unittest.TestCase):
-    def test_create_world(self):
-        expect = "####\n#  #\n#  #\n####\n"
-        world = create_world(4, 4)
-        self.assertEqual(world, expect)
-
-
 class TestBoard(unittest.TestCase):
     def test_board_size(self):
         expect = "#####\n#   #\n#   #\n#   #\n#####\n"

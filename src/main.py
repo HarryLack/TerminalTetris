@@ -1,12 +1,9 @@
 
 import curses
-import sys
-import time
 
 from constants import HEIGHT, TARGET_FRAME_TIME, WIDTH
 from logger import Logger
-from render import clear_console, create_world
-from game import I_STATES, Board, GameController, Piece, Orientation
+from game import GameController
 
 
 def main(stdscr: curses.window):
