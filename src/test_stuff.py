@@ -15,7 +15,7 @@ class TestBoard(unittest.TestCase):
     def test_board_size(self):
         expect = "#####\n#   #\n#   #\n#   #\n#####\n"
         board = Board(5, 5)
-        self.assertEqual(board.to_string(), expect)
+        self.assertEqual(board.render(), expect)
 
     def test_board_add(self):
         board = Board(5, 5)
@@ -52,15 +52,15 @@ class TestPiece(unittest.TestCase):
     def test_move(self):
         piece = Piece(Tetronimo.I, (0, 0))
 
-        self.assertEqual(piece.position, (0,0))
-        
-        piece.move(0,1)
-        
-        self.assertEqual(piece.position, (0,1))
+        self.assertEqual(piece.position, (0, 0))
 
-        piece.move(1,0)
-        
-        self.assertEqual(piece.position, (1,1))
+        piece.move(0, 1)
+
+        self.assertEqual(piece.position, (0, 1))
+
+        piece.move(1, 0)
+
+        self.assertEqual(piece.position, (1, 1))
 
     def test_I(self):
         piece = Piece(Tetronimo.I, (0, 0))

@@ -14,3 +14,7 @@ A rough tracking of work done
 ## Hour 4
 
 - Logger
+
+## Hour 5-6
+
+- Refactor rendering and logic
