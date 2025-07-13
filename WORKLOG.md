@@ -18,3 +18,8 @@ A rough tracking of work done
 ## Hour 5-6
 
 - Refactor rendering and logic
+
+## Hour 7-8
+
+- Move left and right logic
+- Refactor tile tracking

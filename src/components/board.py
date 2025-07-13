@@ -30,7 +30,10 @@ class Board:
                     self.__tiles[i][j] = Tile(" ")
 
     def __render_piece(self):
-        for (y, x) in self.__active_piece.state:
+        if not self.__active_piece:
+            return
+
+        for (x, y) in self.__active_piece.state:
             self.__board[y+self.__active_piece.position[1]][x +
                                                             self.__active_piece.position[0]] = Tile("@")
 
@@ -44,8 +47,8 @@ class Board:
             return
 
         x = reduce(x_reducer, self.__active_piece.state, [])
-        min_x = min(x)
-        if min_x <= 0:
+        min_x = min(x)+self.__active_piece.position[0]
+        if min_x <= 1:
             return False
 
         self.__logger.log("moving left")
@@ -57,8 +60,8 @@ class Board:
 
         x = reduce(x_reducer, self.__active_piece.state, [])
 
-        max_x = max(x)
-        if max_x >= self.__width:
+        max_x = max(x)+self.__active_piece.position[0]
+        if max_x >= self.__width-2:
             return False
 
         self.__logger.log("moving right")

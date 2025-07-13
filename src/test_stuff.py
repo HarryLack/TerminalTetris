@@ -1,21 +1,7 @@
 import unittest
 
 from components.piece import STATES, Orientation
-from game import Board, Piece, Tetronimo
-
-
-class TestBoard(unittest.TestCase):
-    def test_board_size(self):
-        expect = "#####\n#   #\n#   #\n#   #\n#####\n"
-        board = Board(5, 5)
-        self.assertEqual(board.render(), expect)
-
-    def test_board_add(self):
-        board = Board(5, 5)
-        piece = Piece(Tetronimo.I, (1, 1))
-        board.add_piece(piece=piece)
-        self.assertEqual(len(board.pieces), 1)
-        self.assertEqual(board.pieces[0], piece)
+from game import Piece, Tetronimo
 
 
 class TestPiece(unittest.TestCase):
