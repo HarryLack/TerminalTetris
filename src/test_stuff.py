@@ -1,6 +1,9 @@
 import unittest
 
-from game import STATES, Board, Orientation, Piece, Tetronimo
+from components.piece import STATES, Orientation
+from game import Board, Piece, Tetronimo
+
+
 class TestBoard(unittest.TestCase):
     def test_board_size(self):
         expect = "#####\n#   #\n#   #\n#   #\n#####\n"
