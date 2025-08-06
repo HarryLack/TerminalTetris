@@ -4,11 +4,17 @@ import time
 from components.board import Board
 from components.piece import Piece, Tetronimo
 from constants import SCALE, TARGET_FRAME_TIME
+from errors import ScreenSizeException
 from logger import Logger
 
 
 class GameController:
-    def __init__(self, screen: curses.window, width, height, logger=Logger(prefix="GameController")):
+    def __init__(self, screen: curses.window, width, height, logger=Logger(prefix="[GameController]: ")):
+        (screen_height, screen_width) = screen.getmaxyx()
+        if screen_height < height or screen_width < width:
+            raise ScreenSizeException(
+                f"screen w:{screen_width} h:{screen_height} below required size w:{width} h:{height}")
+
         self.__screen = screen
         self.__board = Board(
             width=width*SCALE, height=height*SCALE, logger=logger)
@@ -24,9 +30,10 @@ class GameController:
         pass
 
     def action(self):
-        # TODO Make this actually game loop
+        # TODO: Make this actually game loop
         key = self.__screen.getch()
         self.__logger.log(f"Key:{key}")
+        # TODO: Vim keys
         match key:
             # w
             case 119:
@@ -49,6 +56,7 @@ class GameController:
             case 27:
                 self.__logger.log("esc")
                 curses.endwin()
+                quit()
                 return
         self.__board.action(key)
 

@@ -2,6 +2,7 @@
 import curses
 
 from constants import HEIGHT, TARGET_FRAME_TIME, WIDTH
+from errors import ScreenSizeException
 from logger import Logger
 from game import GameController
 
@@ -17,4 +18,9 @@ def main(stdscr: curses.window):
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    try:
+        curses.wrapper(main)
+    except curses.error as err:
+        print(f"{err}")
+    except ScreenSizeException as err:
+        print(f"{err}")
