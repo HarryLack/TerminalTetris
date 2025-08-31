@@ -9,6 +9,11 @@ def x_reducer(acc: list, val: tuple[int, int]):
     return acc
 
 
+def y_reducer(acc: list, val: tuple[int, int]):
+    acc.append(val[1])
+    return acc
+
+
 class Board:
     def __init__(self, width, height, logger=Logger(prefix="Board")):
         self.__logger = logger
@@ -67,14 +72,54 @@ class Board:
         self.__logger.log("moving right")
         self.__active_piece.move(1, 0)
 
+    def __rotate_right(self):
+        if self.__active_piece is None:
+            return
+
+        self.__active_piece.rotate(True)
+
+    def __rotate_left(self):
+        if self.__active_piece is None:
+            return
+
+        self.__active_piece.rotate()
+
+    def __down(self):
+        if self.__active_piece is None:
+            return
+
+        # TODO:
+        y = reduce(y_reducer, self.__active_piece.state, [])
+        max_y = max(y) + self.__active_piece.position[1]
+
+        if max_y >= self.__height-2:
+            return False
+
+        self.__logger.log("moving down")
+        self.__active_piece.move(0, 1)
+
+    def __drop(self):
+        if self.__active_piece is None:
+            return
+
+        y = reduce(y_reducer, self.__active_piece.state, [])
+        max_y = max(y) + self.__active_piece.position[1]
+
+        diff = self.__height-2 - max_y
+
+        self.__logger.log("dropping")
+        self.__active_piece.move(0, diff)
+
     def action(self, key_code: int):
         match key_code:
             # w
             case 119:
                 self.__logger.log("w")
+                self.__drop()
             # s
             case 115:
                 self.__logger.log("s")
+                self.__down()
             # a
             case 97:
                 self.__logger.log("a")
@@ -86,6 +131,13 @@ class Board:
             # q
             case 113:
                 self.__logger.log("q")
+                self.__rotate_left()
+            # e
+            case 101:
+                self.__logger.log("e")
+                self.__rotate_right()
+            case _:
+                self.__logger.log(f"Code:{key_code} | Key:{chr(key_code)}")
 
     @property
     def active_piece(self):
