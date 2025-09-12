@@ -2,8 +2,9 @@ import curses
 import time
 
 from components.board import Board
+from components.border import Border
 from components.piece import Piece, Tetronimo
-from constants import SCALE, TARGET_FRAME_TIME
+from constants import BORDER_WIDTH, SCALE, TARGET_FRAME_TIME
 from errors import ScreenSizeException
 from logger import Logger
 
@@ -16,12 +17,11 @@ class GameController:
                 f"screen w:{screen_width} h:{screen_height} below required size w:{width} h:{height}")
 
         self.__screen = screen
+        self.__border = Border(
+            width=width*SCALE, height=height*SCALE, size=BORDER_WIDTH*SCALE)
         self.__board = Board(
-            width=width*SCALE, height=height*SCALE, logger=logger)
+            width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=logger)
         self.__logger = logger
-
-    def render(self):
-        return self.__board.render()
 
     def piece(self):
         pass
@@ -66,8 +66,8 @@ class GameController:
         pass
 
     def draw(self):
-        self.__screen.addstr(0, 0, self.render())
-        self.__screen.addstr(f"{iter}")
+        self.__border.render(self.__screen)
+        self.__board.render(self.__screen)
         self.__screen.move(curses.LINES-1, curses.COLS - 1)
         self.__screen.refresh()
 

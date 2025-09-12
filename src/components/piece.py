@@ -21,10 +21,10 @@ class Tetronimo(Enum):
 
 # Offsets
 I_STATES = {
-    Orientation.NONE: [(0, 0), (0, 1), (0, 2), (0, 3)],
-    Orientation.LEFT: [(0, 0), (1, 0), (2, 0), (3, 0)],
-    Orientation.DOWN: [(0, 0), (0, 1), (0, 2), (0, 3)],
-    Orientation.RIGHT: [(0, 0), (1, 0), (2, 0), (3, 0)]
+    Orientation.NONE: [(0, 1), (1, 1), (2, 1), (3, 1)],
+    Orientation.LEFT: [(1, 0), (1, 1), (1, 2), (1, 3)],
+    Orientation.DOWN: [(0, 2), (1, 2), (2, 2), (3, 2)],
+    Orientation.RIGHT: [(2, 0), (2, 1), (2, 2), (2, 3)]
 }
 O_STATES = {
     Orientation.NONE: [(0, 0), (0, 1), (1, 0), (1, 1)],

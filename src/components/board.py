@@ -1,3 +1,4 @@
+import curses
 from functools import reduce
 from components.piece import Piece
 from components.tile import Tile
@@ -16,11 +17,12 @@ def y_reducer(acc: list, val: tuple[int, int]):
 
 
 class Board:
-    def __init__(self, width, height, logger=Logger(prefix="Board")):
+    def __init__(self, width, height, offset, logger=Logger(prefix="Board")):
         self.__logger = logger
         self.__active_piece: Piece | None = None
         self.__width = width
         self.__height = height
+        self.__offset = offset
         self.__tiles: list[list[Tile]] = [[Tile(" ") for _ in range(width)]
                                           for _ in range(height)]
         self.__board = [[Tile(" ") for _ in range(width)]
@@ -30,10 +32,7 @@ class Board:
     def __setup_tiles(self):
         for i in range(self.__height):
             for j in range(self.__width):
-                if i == 0 or i == self.__height-1 or j == 0 or j == self.__width-1:
-                    self.__tiles[i][j] = Tile("#")
-                else:
-                    self.__tiles[i][j] = Tile(" ")
+                self.__tiles[i][j] = Tile(" ")
 
     def __render_piece(self):
         if not self.__active_piece:
@@ -144,14 +143,12 @@ class Board:
         self.__active_piece = piece
         return True
 
-    def render(self):
+    def render(self, screen: curses.window):
         self.__logger.log("Rendering")
         self.__render_tiles()
         self.__render_piece()
 
-        world = ""
-        for row in self.__board:
-            for col in row:
-                world += col.render()
-            world += "\n"
-        return world
+        for row_idx, row in enumerate(self.__board):
+            for col_idx, col in enumerate(row):
+                screen.addstr(self.__offset+row_idx,
+                              self.__offset+col_idx, col.render())
