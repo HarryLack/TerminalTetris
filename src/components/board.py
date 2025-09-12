@@ -1,6 +1,7 @@
 from functools import reduce
 from components.piece import Piece
 from components.tile import Tile
+from keys import Key
 from logger import Logger
 
 
@@ -112,28 +113,22 @@ class Board:
 
     def action(self, key_code: int):
         match key_code:
-            # w
-            case 119:
+            case Key.w.value:
                 self.__logger.log("w")
                 self.__drop()
-            # s
-            case 115:
+            case Key.s.value:
                 self.__logger.log("s")
                 self.__down()
-            # a
-            case 97:
+            case Key.a.value:
                 self.__logger.log("a")
                 self.__move_left()
-            # d
-            case 100:
+            case Key.d.value:
                 self.__logger.log("d")
                 self.__move_right()
-            # q
-            case 113:
+            case Key.q.value:
                 self.__logger.log("q")
                 self.__rotate_left()
-            # e
-            case 101:
+            case Key.e.value:
                 self.__logger.log("e")
                 self.__rotate_right()
             case _:
