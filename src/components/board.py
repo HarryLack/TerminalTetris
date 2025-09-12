@@ -17,8 +17,12 @@ def y_reducer(acc: list, val: tuple[int, int]):
 
 
 class Board:
-    def __init__(self, width, height, offset, logger=Logger(prefix="Board")):
-        self.__logger = logger
+    def __init__(self, width, height, offset, logger: Logger | None = None):
+        if logger is not None:
+            self.__logger = logger.append("[Board]")
+        else:
+            self.__logger = Logger("[Board]")
+            
         self.__active_piece: Piece | None = None
         self.__width = width
         self.__height = height
@@ -53,7 +57,7 @@ class Board:
 
         x = reduce(x_reducer, self.__active_piece.state, [])
         min_x = min(x)+self.__active_piece.position[0]
-        if min_x <= 1:
+        if min_x <= 0:
             return False
 
         self.__logger.log("moving left")
@@ -66,7 +70,7 @@ class Board:
         x = reduce(x_reducer, self.__active_piece.state, [])
 
         max_x = max(x)+self.__active_piece.position[0]
-        if max_x >= self.__width-2:
+        if max_x >= self.__width-1:
             return False
 
         self.__logger.log("moving right")
@@ -92,7 +96,7 @@ class Board:
         y = reduce(y_reducer, self.__active_piece.state, [])
         max_y = max(y) + self.__active_piece.position[1]
 
-        if max_y >= self.__height-2:
+        if max_y >= self.__height-1:
             return False
 
         self.__logger.log("moving down")
@@ -105,7 +109,7 @@ class Board:
         y = reduce(y_reducer, self.__active_piece.state, [])
         max_y = max(y) + self.__active_piece.position[1]
 
-        diff = self.__height-2 - max_y
+        diff = self.__height-1 - max_y
 
         self.__logger.log("dropping")
         self.__active_piece.move(0, diff)

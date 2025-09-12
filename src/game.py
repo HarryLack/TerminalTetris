@@ -10,18 +10,22 @@ from logger import Logger
 
 
 class GameController:
-    def __init__(self, screen: curses.window, width, height, logger=Logger(prefix="[GameController]: ")):
+    def __init__(self, screen: curses.window, width, height, logger: Logger | None = None):
         (screen_height, screen_width) = screen.getmaxyx()
         if screen_height < height or screen_width < width:
             raise ScreenSizeException(
                 f"screen w:{screen_width} h:{screen_height} below required size w:{width} h:{height}")
 
+        if logger is not None:
+            self.__logger = logger.append("[GameController]")
+        else:
+            self.__logger = Logger(prefix="[GameController]")
+
         self.__screen = screen
         self.__border = Border(
             width=width*SCALE, height=height*SCALE, size=BORDER_WIDTH*SCALE)
         self.__board = Board(
-            width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=logger)
-        self.__logger = logger
+            width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=self.__logger)
 
     def piece(self):
         pass
