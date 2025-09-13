@@ -19,3 +19,6 @@ class Logger:
 
     def append(self, prefix):
         return Logger(file=self.__file, prefix=f"{self.__prefix}:{prefix}")
+
+    def __del__(self):
+        self.file.close()
