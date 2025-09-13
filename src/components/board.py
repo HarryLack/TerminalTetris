@@ -1,7 +1,7 @@
 import curses
 from functools import reduce
 from components.piece import Piece
-from components.tile import Tile
+from components.tile import Tile, TileType
 from keys import Key
 from logger import Logger
 
@@ -17,46 +17,47 @@ def y_reducer(acc: list, val: tuple[int, int]):
 
 
 class Board:
-    def __init__(self, width, height, offset, logger: Logger | None = None):
+    def __init__(self, width, height, offset=0, logger: Logger | None = None):
         if logger is not None:
             self.__logger = logger.append("[Board]")
         else:
-            self.__logger = Logger("[Board]")
-            
+            self.__logger = Logger(prefix="[Board]")
+
         self.__active_piece: Piece | None = None
         self.__width = width
         self.__height = height
         self.__offset = offset
-        self.__tiles: list[list[Tile]] = [[Tile(" ") for _ in range(width)]
+        self.__tiles: list[list[Tile]] = [[Tile(TileType.Empty) for _ in range(width)]
                                           for _ in range(height)]
-        self.__board = [[Tile(" ") for _ in range(width)]
+        self.__board = [[Tile(TileType.Empty) for _ in range(width)]
                         for _ in range(height)]
         self.__setup_tiles()
 
     def __setup_tiles(self):
         for i in range(self.__height):
             for j in range(self.__width):
-                self.__tiles[i][j] = Tile(" ")
+                self.__board[i][j] = Tile(TileType.Empty)
 
     def __render_piece(self):
         if not self.__active_piece:
             return
 
-        for (x, y) in self.__active_piece.state:
-            self.__board[y+self.__active_piece.position[1]][x +
-                                                            self.__active_piece.position[0]] = Tile("@")
+        for (x, y) in self.__active_piece.position:
+            self.__board[y][x] = Tile(TileType.Piece)
 
     def __render_tiles(self):
         for y, row in enumerate(self.__tiles):
             for x, tile in enumerate(row):
                 self.__board[y][x] = tile
 
+    def __store_piece(self):
+        pass
+
     def __move_left(self):
         if self.__active_piece is None:
             return
 
-        x = reduce(x_reducer, self.__active_piece.state, [])
-        min_x = min(x)+self.__active_piece.position[0]
+        min_x = min(reduce(x_reducer, self.__active_piece.position, []))
         if min_x <= 0:
             return False
 
@@ -67,9 +68,7 @@ class Board:
         if self.__active_piece is None:
             return
 
-        x = reduce(x_reducer, self.__active_piece.state, [])
-
-        max_x = max(x)+self.__active_piece.position[0]
+        max_x = max(reduce(x_reducer, self.__active_piece.position, []))
         if max_x >= self.__width-1:
             return False
 
@@ -93,21 +92,33 @@ class Board:
             return
 
         # TODO:
-        y = reduce(y_reducer, self.__active_piece.state, [])
-        max_y = max(y) + self.__active_piece.position[1]
-
+        max_y = max(reduce(y_reducer, self.__active_piece.position, []))
+        self.__logger.log(f"max_y: {max_y}")
         if max_y >= self.__height-1:
             return False
 
         self.__logger.log("moving down")
         self.__active_piece.move(0, 1)
 
+        is_stopped = False
+
+        for (pos_x, pos_y) in self.__active_piece.position:
+            if pos_y >= self.__height-1:
+                is_stopped = True
+                break
+
+            below = self.__tiles[pos_y+1][pos_x]
+            if below.symbol is not TileType.Empty:
+                self.__logger.log("should stop")
+
+        if is_stopped:
+            self.__store_piece()
+
     def __drop(self):
         if self.__active_piece is None:
             return
 
-        y = reduce(y_reducer, self.__active_piece.state, [])
-        max_y = max(y) + self.__active_piece.position[1]
+        max_y = max(reduce(y_reducer, self.__active_piece.position, []))
 
         diff = self.__height-1 - max_y
 

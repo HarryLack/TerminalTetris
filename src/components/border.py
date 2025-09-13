@@ -1,10 +1,10 @@
 import curses
-from components.tile import Tile
+from components.tile import Tile, TileType
 
 
 class Border:
     def __init__(self, width: int, height: int, size: int):
-        self.__tiles: list[list[Tile]] = [[Tile("#") for _ in range(width+(size*2))]
+        self.__tiles: list[list[Tile]] = [[Tile(TileType.Border) for _ in range(width+(size*2))]
                                           for _ in range(height+(size*2))]
 
     @property

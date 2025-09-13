@@ -2,7 +2,7 @@ import unittest
 
 from components.board import Board
 from components.piece import STATES, Orientation
-from game import Piece, Tetronimo
+from game_controller import Piece, Tetronimo
 
 
 class TestPiece(unittest.TestCase):
@@ -32,15 +32,15 @@ class TestPiece(unittest.TestCase):
     def test_move(self):
         piece = Piece(Tetronimo.I, (0, 0))
 
-        self.assertEqual(piece.position, (0, 0))
+        self.assertEqual(piece.centre, (0, 0))
 
         piece.move(0, 1)
 
-        self.assertEqual(piece.position, (0, 1))
+        self.assertEqual(piece.centre, (0, 1))
 
         piece.move(1, 0)
 
-        self.assertEqual(piece.position, (1, 1))
+        self.assertEqual(piece.centre, (1, 1))
 
     def test_I(self):
         piece = Piece(Tetronimo.I, (0, 0))
@@ -74,15 +74,15 @@ class TestPieceI(unittest.TestCase):
     def test_move(self):
         piece = Piece(Tetronimo.I, (0, 0))
 
-        self.assertEqual(piece.position, (0, 0))
+        self.assertEqual(piece.centre, (0, 0))
 
         piece.move(0, 1)
 
-        self.assertEqual(piece.position, (0, 1))
+        self.assertEqual(piece.centre, (0, 1))
 
         piece.move(1, 0)
 
-        self.assertEqual(piece.position, (1, 1))
+        self.assertEqual(piece.centre, (1, 1))
 
     def test_I(self):
         piece = Piece(Tetronimo.I, (0, 0))

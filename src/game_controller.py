@@ -27,6 +27,8 @@ class GameController:
         self.__board = Board(
             width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=self.__logger)
 
+        self.__logger.log(f"{GameController.__name__} init")
+
     def piece(self):
         pass
 
@@ -39,23 +41,6 @@ class GameController:
         self.__logger.log(f"Key:{key}")
         # TODO: Vim keys
         match key:
-            # w
-            case 119:
-                self.__logger.log("w")
-            # s
-            case 115:
-                self.__logger.log("s")
-            # a
-            case 97:
-                self.__logger.log("a")
-                # self.__board.active_piece.move(-1,0)
-            # d
-            case 100:
-                self.__logger.log("d")
-                # self.__board.active_piece.move(1,0)
-            # q
-            case 113:
-                self.__logger.log("q")
             # ESC
             case 27:
                 self.__logger.log("esc")

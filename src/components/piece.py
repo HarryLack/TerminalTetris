@@ -83,6 +83,7 @@ class Piece:
         self.__kind = kind
         self.__rotation = rotation
         self.__position = position
+        self.__state = STATES[self.__kind][self.__rotation]
 
     @property
     def kind(self):
@@ -93,8 +94,13 @@ class Piece:
         return self.__rotation
 
     @property
-    def position(self):
+    def centre(self):
         return self.__position
+
+    @property
+    def position(self):
+        return [[pos[0]+self.__position[0],
+                 pos[1]+self.__position[1]] for pos in self.__state]
 
     def rotate(self, right=True):
         match self.__rotation:
@@ -118,10 +124,6 @@ class Piece:
                     self.__rotation = Orientation.NONE
                 else:
                     self.__rotation = Orientation.DOWN
-
-    @property
-    def state(self):
-        return STATES[self.__kind][self.__rotation]
 
     def move(self, x: int, y: int):
         self.__position = (self.__position[0]+x, self.__position[1]+y)

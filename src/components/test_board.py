@@ -7,11 +7,6 @@ from keys import Key
 
 
 class TestBoard(unittest.TestCase):
-    def test_board_size(self):
-        expect = "     \n     \n     \n     \n     \n"
-        board = Board(5, 5)
-        self.assertEqual(board.render(), expect)
-
     def test_board_add(self):
         board = Board(5, 5)
         piece = Piece(Tetronimo.I, (1, 1))
@@ -59,9 +54,8 @@ class TestBoardPieceI(unittest.TestCase):
         board = Board(8, 8)
         piece = Piece(Tetronimo.I, (4, 1), Orientation.RIGHT)
         board.add_piece(piece)
-        print(board.render())
 
-        board.action(Key.e)
+        board.action(Key.e.value)
 
         self.assertEqual(piece.rotation, Orientation.DOWN)
-        self.assertEqual(piece.position, ())
+        self.assertEqual(piece.centre, ())

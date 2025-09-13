@@ -4,7 +4,7 @@ import curses
 from constants import HEIGHT, TARGET_FRAME_TIME, WIDTH
 from errors import ScreenSizeException
 from logger import Logger
-from game import GameController
+from game_controller import GameController
 
 
 def main(stdscr: curses.window):
