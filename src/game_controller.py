@@ -6,6 +6,7 @@ from components.border import Border
 from components.piece import Piece, Tetronimo
 from constants import BORDER_WIDTH, SCALE, TARGET_FRAME_TIME
 from errors import ScreenSizeException
+from keys import Key
 from logger import Logger
 
 
@@ -39,10 +40,10 @@ class GameController:
         # TODO: Make this actually game loop
         key = self.__screen.getch()
         self.__logger.log(f"Key:{key}")
-        # TODO: Vim keys
+        # TODO: Vim keys?
         match key:
             # ESC
-            case 27:
+            case Key.ESC.value:
                 self.__logger.log("esc")
                 curses.endwin()
                 quit()

@@ -51,7 +51,12 @@ class Board:
                 self.__board[y][x] = tile
 
     def __store_piece(self):
-        pass
+        assert self.__active_piece is not None, "__store_piece must only be called while a piece is active"
+
+        for (x, y) in self.__active_piece.position:
+            self.__tiles[y][x] = Tile(TileType.Piece)
+
+        self.__active_piece = None
 
     def __move_left(self):
         if self.__active_piece is None:
@@ -63,6 +68,7 @@ class Board:
 
         self.__logger.log("moving left")
         self.__active_piece.move(-1, 0)
+        self.__post_move()
 
     def __move_right(self):
         if self.__active_piece is None:
@@ -74,6 +80,7 @@ class Board:
 
         self.__logger.log("moving right")
         self.__active_piece.move(1, 0)
+        self.__post_move()
 
     def __rotate_right(self):
         if self.__active_piece is None:
@@ -81,11 +88,35 @@ class Board:
 
         self.__active_piece.rotate(True)
 
+        self.__post_rotate()
+
     def __rotate_left(self):
         if self.__active_piece is None:
             return
 
-        self.__active_piece.rotate()
+        self.__active_piece.rotate(False)
+
+        self.__post_rotate()
+
+    def __post_move(self):
+        is_stopped = False
+
+        for (pos_x, pos_y) in self.__active_piece.position:
+            if pos_y >= self.__height-1:
+                is_stopped = True
+                break
+
+            below = self.__tiles[pos_y+1][pos_x]
+            if below.symbol is not TileType.Empty:
+                is_stopped = True
+                break
+
+        if is_stopped:
+            self.__store_piece()
+
+    def __post_rotate(self):
+        # TODO
+        pass
 
     def __down(self):
         if self.__active_piece is None:
@@ -100,19 +131,7 @@ class Board:
         self.__logger.log("moving down")
         self.__active_piece.move(0, 1)
 
-        is_stopped = False
-
-        for (pos_x, pos_y) in self.__active_piece.position:
-            if pos_y >= self.__height-1:
-                is_stopped = True
-                break
-
-            below = self.__tiles[pos_y+1][pos_x]
-            if below.symbol is not TileType.Empty:
-                self.__logger.log("should stop")
-
-        if is_stopped:
-            self.__store_piece()
+        self.__post_move()
 
     def __drop(self):
         if self.__active_piece is None:
@@ -124,6 +143,8 @@ class Board:
 
         self.__logger.log("dropping")
         self.__active_piece.move(0, diff)
+
+        self.__post_move()
 
     def action(self, key_code: int):
         match key_code:

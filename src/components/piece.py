@@ -83,7 +83,6 @@ class Piece:
         self.__kind = kind
         self.__rotation = rotation
         self.__position = position
-        self.__state = STATES[self.__kind][self.__rotation]
 
     @property
     def kind(self):
@@ -99,10 +98,11 @@ class Piece:
 
     @property
     def position(self):
+        state = STATES[self.__kind][self.__rotation]
         return [[pos[0]+self.__position[0],
-                 pos[1]+self.__position[1]] for pos in self.__state]
+                 pos[1]+self.__position[1]] for pos in state]
 
-    def rotate(self, right=True):
+    def rotate(self, right=False):
         match self.__rotation:
             case Orientation.NONE:
                 if right:

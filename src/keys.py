@@ -8,3 +8,4 @@ class Key(Enum):
     q = 113
     s = 115
     w = 119
+    ESC = 27

@@ -10,13 +10,13 @@ class TestPiece(unittest.TestCase):
         piece = Piece(Tetronimo.I, (0, 0))
 
         self.assertEqual(piece.rotation, Orientation.NONE)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.RIGHT)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.DOWN)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.LEFT)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.NONE)
 
         self.assertEqual(piece.rotation, Orientation.NONE)
@@ -44,7 +44,8 @@ class TestPiece(unittest.TestCase):
 
     def test_I(self):
         piece = Piece(Tetronimo.I, (0, 0))
-        self.assertEqual(piece.state, STATES[Tetronimo.I][Orientation.NONE])
+        self.assertEqual(piece.kind, Tetronimo.I)
+        self.assertEqual(piece.rotation, Orientation.NONE)
 
 
 class TestPieceI(unittest.TestCase):
@@ -52,13 +53,13 @@ class TestPieceI(unittest.TestCase):
         piece = Piece(Tetronimo.I, (0, 0))
 
         self.assertEqual(piece.rotation, Orientation.NONE)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.RIGHT)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.DOWN)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.LEFT)
-        piece.rotate()
+        piece.rotate(True)
         self.assertEqual(piece.rotation, Orientation.NONE)
 
         self.assertEqual(piece.rotation, Orientation.NONE)
@@ -86,6 +87,5 @@ class TestPieceI(unittest.TestCase):
 
     def test_I(self):
         piece = Piece(Tetronimo.I, (0, 0))
-        self.assertEqual(piece.state, STATES[Tetronimo.I][Orientation.NONE])
-        
-
+        self.assertEqual(piece.kind, Tetronimo.I)
+        self.assertEqual(piece.rotation, Orientation.NONE)
