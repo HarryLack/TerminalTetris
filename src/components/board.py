@@ -102,6 +102,8 @@ class Board:
         is_stopped = False
 
         for (pos_x, pos_y) in self.__active_piece.position:
+            assert pos_y < self.__height, f"Piece cannot cross bottom of board {pos_y}"
+            assert pos_x < self.__width and pos_x >= 0, f"Piece cannot cross sides of board {pos_x}"
             if pos_y >= self.__height-1:
                 is_stopped = True
                 break
@@ -126,7 +128,7 @@ class Board:
         max_y = max(reduce(y_reducer, self.__active_piece.position, []))
         self.__logger.log(f"max_y: {max_y}")
         if max_y >= self.__height-1:
-            return False
+            return
 
         self.__logger.log("moving down")
         self.__active_piece.move(0, 1)
@@ -137,11 +139,24 @@ class Board:
         if self.__active_piece is None:
             return
 
-        max_y = max(reduce(y_reducer, self.__active_piece.position, []))
+    # TODO: Unit test this brittle thing
+        diff = self.__height-1
+        for (x, y) in self.__active_piece.position:
+            for row in range(y, self.__height):
+                if row >= self.__height-1:
+                    if (row - y) < diff:
+                        diff = row-y
+                    break
 
-        diff = self.__height-1 - max_y
+                below = self.__tiles[row+1][x]
+                self.__logger.log(below.symbol.value)
+                if below.symbol is not TileType.Empty and (row - y) < diff:
+                    diff = row - y
+                    break
 
-        self.__logger.log("dropping")
+        assert diff < self.__height, "Cannot drop a piece by more than the height of the board"
+
+        self.__logger.log(f"dropping {diff}")
         self.__active_piece.move(0, diff)
 
         self.__post_move()
@@ -166,8 +181,6 @@ class Board:
             case Key.e.value:
                 self.__logger.log("e")
                 self.__rotate_right()
-            case _:
-                self.__logger.log(f"Code:{key_code} | Key:{chr(key_code)}")
 
     @property
     def active_piece(self):

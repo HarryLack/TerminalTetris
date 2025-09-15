@@ -1,10 +1,11 @@
 import curses
+import sys
 import time
 
 from components.board import Board
 from components.border import Border
 from components.piece import Piece, Tetronimo
-from constants import BORDER_WIDTH, SCALE, TARGET_FRAME_TIME
+from constants import BORDER_WIDTH, SCALE, TARGET_FRAME_RATE, TARGET_FRAME_TIME, TARGET_TICK_RATE
 from errors import ScreenSizeException
 from keys import Key
 from logger import Logger
@@ -28,6 +29,8 @@ class GameController:
         self.__board = Board(
             width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=self.__logger)
 
+        self.last_drop = time.time()
+
         self.__logger.log(f"{GameController.__name__} init")
 
     def piece(self):
@@ -42,18 +45,30 @@ class GameController:
         self.__logger.log(f"Key:{key}")
         # TODO: Vim keys?
         match key:
+            case Key.s.value:
+                self.last_drop = time.time()
             # ESC
             case Key.ESC.value:
                 self.__logger.log("esc")
                 curses.endwin()
-                quit()
-                return
+                sys.exit()
+            case -1:
+                # No input case
+                pass
+            case _:
+                self.__logger.log(f"Code:{key} | Key:{chr(key)}")
         self.__board.action(key)
 
     def update(self, dt: float):
         if not self.__board.active_piece:
             self.__board.add_piece(Piece(kind=Tetronimo.I, position=(1, 1)))
-        pass
+
+        now = time.time()
+        if (now - self.last_drop) > TARGET_TICK_RATE:
+            self.__logger.log("timeout")
+            # TODO: not this
+            self.__board.action(Key.s.value)
+            self.last_drop = now
 
     def draw(self):
         self.__border.render(self.__screen)
@@ -63,6 +78,7 @@ class GameController:
 
     def play(self):
         dt = time.time()
+        self.last_drop = time.time()
 
         iter = 0
         while (True and iter < 1000):

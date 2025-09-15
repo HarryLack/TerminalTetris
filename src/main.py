@@ -12,6 +12,8 @@ def main(stdscr: curses.window):
     logger.log("Hello, World!")
     logger.log(f"Target Frame Rate:{TARGET_FRAME_TIME}")
 
+    stdscr.nodelay(True)
+
     game = GameController(screen=stdscr, width=WIDTH, height=HEIGHT)
 
     game.play()

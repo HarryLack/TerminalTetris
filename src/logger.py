@@ -18,7 +18,7 @@ class Logger:
             f"[{time.strftime('%G-%m-%dT%H:%M:%SZ',time.gmtime())}]:[{LEVELS[level]}]: {self.__prefix} {statement}\n")
 
     def append(self, prefix):
-        return Logger(file=self.__file, prefix=f"{self.__prefix}:{prefix}")
+        return Logger(file=self.__file, prefix=f"{self.__prefix}>{prefix}")
 
     def __del__(self):
         self.file.close()
