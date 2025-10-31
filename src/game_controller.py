@@ -5,7 +5,7 @@ import time
 from components.board import Board
 from components.border import Border
 from components.piece import Piece, Tetronimo
-from constants import BORDER_WIDTH, SCALE, TARGET_FRAME_RATE, TARGET_FRAME_TIME, TARGET_TICK_RATE
+from constants import BORDER_WIDTH, MIN_TICK_TIME, SCALE, TARGET_FRAME_TIME, TARGET_TICK_TIME
 from errors import ScreenSizeException
 from keys import Key
 from logger import Logger
@@ -30,6 +30,7 @@ class GameController:
             width=width*SCALE, height=height*SCALE, offset=BORDER_WIDTH*SCALE, logger=self.__logger)
 
         self.last_drop = time.time()
+        self.__tick_rate = TARGET_TICK_TIME
 
         self.__logger.log(f"{GameController.__name__} init")
 
@@ -40,16 +41,32 @@ class GameController:
         pass
 
     def action(self):
-        # TODO: Make this actually game loop
         key = self.__screen.getch()
-        self.__logger.log(f"Key:{key}")
         # TODO: Vim keys?
         match key:
-            case Key.s.value:
+            case Key.w.value:
+                # self.__logger.log("w")
+                self.__board.drop()
                 self.last_drop = time.time()
+            case Key.s.value:
+                # self.__logger.log("s")
+                self.__board.down()
+                self.last_drop = time.time()
+            case Key.a.value:
+                # self.__logger.log("a")
+                self.__board.move_left()
+            case Key.d.value:
+                # self.__logger.log("d")
+                self.__board.move_right()
+            case Key.q.value:
+                # self.__logger.log("q")
+                self.__board.rotate_left()
+            case Key.e.value:
+                # self.__logger.log("e")
+                self.__board.rotate_right()
             # ESC
             case Key.ESC.value:
-                self.__logger.log("esc")
+                # self.__logger.log("esc")
                 curses.endwin()
                 sys.exit()
             case -1:
@@ -57,41 +74,43 @@ class GameController:
                 pass
             case _:
                 self.__logger.log(f"Code:{key} | Key:{chr(key)}")
-        self.__board.action(key)
 
-    def update(self, dt: float):
+    def update(self):
         if not self.__board.active_piece:
             self.__board.add_piece(Piece(kind=Tetronimo.I, position=(1, 1)))
 
         now = time.time()
-        if (now - self.last_drop) > TARGET_TICK_RATE:
-            self.__logger.log("timeout")
-            # TODO: not this
-            self.__board.action(Key.s.value)
+        if (now - self.last_drop) > self.__tick_rate:
+            self.__board.down()
             self.last_drop = now
+            self.__tick_rate = max(self.__tick_rate*0.975, MIN_TICK_TIME)
+            self.__logger.log(self.__tick_rate)
 
     def draw(self):
         self.__border.render(self.__screen)
         self.__board.render(self.__screen)
+        self.__screen.addstr(0, 0, f"{self.__tick_rate}")
+        # pylint: disable-next=no-member
         self.__screen.move(curses.LINES-1, curses.COLS - 1)
         self.__screen.refresh()
 
     def play(self):
-        dt = time.time()
+        prev = time.time()
         self.last_drop = time.time()
 
-        iter = 0
-        while (True and iter < 1000):
-            self.action()
-            self.update(dt)
+        game_frame = 0
+        while True:
+            # now = time.time()
+            # if (now - prev) < TARGET_FRAME_TIME:
+            #     time.sleep(TARGET_FRAME_TIME-(now-prev))
+            #     continue
 
-            iter += 1
-            now = time.time()
-            if (now - dt) < TARGET_FRAME_TIME:
-                time.sleep(TARGET_FRAME_TIME-(now-dt))
-                continue
+            game_frame += 1
+
+            self.action()
+            self.update()
 
             self.draw()
 
-            dt = now
+            # prev = now
             self.tick()

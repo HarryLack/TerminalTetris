@@ -2,7 +2,6 @@ import curses
 from functools import reduce
 from components.piece import Piece
 from components.tile import Tile, TileType
-from keys import Key
 from logger import Logger
 
 
@@ -58,7 +57,7 @@ class Board:
 
         self.__active_piece = None
 
-    def __move_left(self):
+    def move_left(self):
         if self.__active_piece is None:
             return
 
@@ -70,7 +69,7 @@ class Board:
         self.__active_piece.move(-1, 0)
         self.__post_move()
 
-    def __move_right(self):
+    def move_right(self):
         if self.__active_piece is None:
             return
 
@@ -82,7 +81,7 @@ class Board:
         self.__active_piece.move(1, 0)
         self.__post_move()
 
-    def __rotate_right(self):
+    def rotate_right(self):
         if self.__active_piece is None:
             return
 
@@ -90,7 +89,7 @@ class Board:
 
         self.__post_rotate()
 
-    def __rotate_left(self):
+    def rotate_left(self):
         if self.__active_piece is None:
             return
 
@@ -120,7 +119,7 @@ class Board:
         # TODO
         pass
 
-    def __down(self):
+    def down(self):
         if self.__active_piece is None:
             return
 
@@ -135,11 +134,11 @@ class Board:
 
         self.__post_move()
 
-    def __drop(self):
+    def drop(self):
         if self.__active_piece is None:
             return
 
-    # TODO: Unit test this brittle thing
+        # TODO: Unit test this brittle thing
         diff = self.__height-1
         for (x, y) in self.__active_piece.position:
             for row in range(y, self.__height):
@@ -161,27 +160,6 @@ class Board:
 
         self.__post_move()
 
-    def action(self, key_code: int):
-        match key_code:
-            case Key.w.value:
-                self.__logger.log("w")
-                self.__drop()
-            case Key.s.value:
-                self.__logger.log("s")
-                self.__down()
-            case Key.a.value:
-                self.__logger.log("a")
-                self.__move_left()
-            case Key.d.value:
-                self.__logger.log("d")
-                self.__move_right()
-            case Key.q.value:
-                self.__logger.log("q")
-                self.__rotate_left()
-            case Key.e.value:
-                self.__logger.log("e")
-                self.__rotate_right()
-
     @property
     def active_piece(self):
         return self.__active_piece
@@ -193,7 +171,7 @@ class Board:
         return True
 
     def render(self, screen: curses.window):
-        self.__logger.log("Rendering")
+        # self.__logger.log("Rendering")
         self.__render_tiles()
         self.__render_piece()
 
